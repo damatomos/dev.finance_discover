@@ -11,7 +11,6 @@ const Notify = {
   },
   addNotify({title, body, icon, image}) {
     if ( Notify.permission == 'granted' ) {
-      console.log('notify');
       new Notification(title, {body, image, icon} )
     }
   }
@@ -44,10 +43,12 @@ const Transaction = {
   add(transaction) {
     Transaction.all.push(transaction);
     App.reload();
+    Notify.addNotify({title: "Transação Adicionada!", body: `Você adicionou uma transação de R$ ${transaction.amount/100}`, icon: "./assets/logo.png" });
   },
   remove(index) {
     Transaction.all.splice(index, 1);
     App.reload();
+    Notify.addNotify({title: "Transação removida!", body: "Você removeu uma transação!", icon: "./assets/logo.png" });
   },
   incomes() { // Somar as entradas
     let income = 0;
@@ -112,8 +113,8 @@ const Utils = {
     return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`
   },
   formatAmount(amount) {
-    value = Number(amount) * 100;
-    return value;
+    let value = Number(amount) * 100;
+    return Math.round(value);
   },
   formatCurrency(value) {
     const signal = Number(value) < 0 ? "-" : "";
